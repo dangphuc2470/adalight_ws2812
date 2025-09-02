@@ -22,15 +22,21 @@ CRGB leds[NUM_LEDS];
 void setup() {
   // Use NEOPIXEL to keep true colors
   FastLED.addLeds<NEOPIXEL, DATA_PIN>(leds, NUM_LEDS);
-  
-  // Initial RGB flash
-  LEDS.showColor(CRGB(255, 0, 0));
-  delay(500);
-  LEDS.showColor(CRGB(0, 255, 0));
-  delay(500);
-  LEDS.showColor(CRGB(0, 0, 255));
-  delay(500);
-  LEDS.showColor(CRGB(0, 0, 0));
+
+  // Wait a moment before checking for a serial connection.
+  // This helps differentiate a power-on from a serial port reset.
+  delay(200);
+  // Only run the test flash if there's no serial data coming in immediately.
+  if (!Serial.available()) {
+      // Initial RGB flash on the LED strip (for testing)
+      FastLED.showColor(CRGB(255, 0, 0));
+      delay(500);
+      FastLED.showColor(CRGB(0, 255, 0));
+      delay(500);
+      FastLED.showColor(CRGB(0, 0, 255));
+      delay(500);
+      FastLED.showColor(CRGB(0, 0, 0));
+  }
   
   Serial.begin(serialRate);
   // Send "Magic Word" string to host
